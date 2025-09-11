@@ -1,16 +1,17 @@
-<script setup>
-import { ref } from 'vue'
-
-</script>
+<script lang="ts" setup></script>
 
 <template>
-  <div class="container">
-  <h1>Idiaz</h1>
-  <form>
-    <input placeholder="Enter something..." class="input-field">
-    <button class="submit-btn">Submit</button>
-  </form>
-  </div>
+  <v-app>
+    <v-main>
+      <v-container fluid class="container">
+        <h1>Idiaz</h1>
+        <form>
+          <input placeholder="Enter something..." class="input-field" />
+          <button class="submit-btn">Hit it</button>
+        </form>
+      </v-container>
+    </v-main>
+  </v-app>
 </template>
 
 <style scoped>
@@ -56,7 +57,7 @@ import { ref } from 'vue'
 /* For larger screens */
 @media (min-width: 768px) {
   .container {
-    width: 60%;
+    width: 100%;
     height: auto;
   }
 
