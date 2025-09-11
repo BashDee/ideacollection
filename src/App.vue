@@ -4,7 +4,7 @@
   <v-app>
     <v-main>
       <v-container fluid class="container">
-        <h1>Idiaz</h1>
+        <h1>iDeas</h1>
         <form>
           <input placeholder="Enter something..." class="input-field" />
           <button class="submit-btn">Hit it</button>
@@ -21,7 +21,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #28a745; /* Green background */
+  background-color: #4caf50; /* Green background */
   padding: 20px;
   border-radius: 10px;
   width: 100%;
@@ -35,8 +35,8 @@
   border-radius: 5px;
   font-size: 16px;
   margin-bottom: 15px;
-  background-color: transparent;
-  color: #fff;
+  background-color: #ffffff;
+  color: #333333;
 }
 
 .submit-btn {
@@ -57,7 +57,7 @@
 /* For larger screens */
 @media (min-width: 768px) {
   .container {
-    width: 100%;
+    width: 97%;
     height: auto;
   }
 
