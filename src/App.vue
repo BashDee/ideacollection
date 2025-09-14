@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
 
+const loading = ref(false)
 const form = reactive({
   title: '',
   error: '',
@@ -8,6 +9,7 @@ const form = reactive({
 const hitIt = async (e: Event) => {
   e.preventDefault()
   try {
+    loading.value = true
     const idea = {
       idea_title: form.title,
       description: form.title,
@@ -38,6 +40,8 @@ const hitIt = async (e: Event) => {
   } catch (error) {
     form.error = 'Failed to add idea. Please try again.'
     console.error('Error adding idea:', error)
+  } finally {
+    loading.value = false
   }
 }
 
@@ -52,6 +56,7 @@ const resetForm = () => {
       <v-container fluid class="container">
         <h1>iDeas</h1>
         <form>
+          <div v-if="loading">Loading...</div>
           <div v-if="form.error" class="error-message">{{ form.error }}</div>
           <input v-model="form.title" placeholder="Enter something..." class="input-field" />
           <button class="submit-btn" @click="hitIt">Hit it</button>
