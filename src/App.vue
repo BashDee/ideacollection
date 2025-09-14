@@ -1,4 +1,50 @@
-<script lang="ts" setup></script>
+<script lang="ts" setup>
+import { ref, reactive, onMounted } from 'vue'
+
+const form = reactive({
+  title: '',
+  error: '',
+})
+const hitIt = async (e: Event) => {
+  e.preventDefault()
+  try {
+    const idea = {
+      idea_title: form.title,
+      description: form.title,
+    }
+
+    if (!form.title) {
+      form.error = 'Title cannot be empty'
+      return
+    }
+
+    const response = await fetch('http://localhost:8000/api/v1/idea', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(idea),
+    })
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+
+    const result = await response.json()
+    console.log('Idea added:', result)
+
+    resetForm()
+    form.error = ''
+  } catch (error) {
+    form.error = 'Failed to add idea. Please try again.'
+    console.error('Error adding idea:', error)
+  }
+}
+
+const resetForm = () => {
+  form.title = ''
+}
+</script>
 
 <template>
   <v-app>
@@ -6,8 +52,9 @@
       <v-container fluid class="container">
         <h1>iDeas</h1>
         <form>
-          <input placeholder="Enter something..." class="input-field" />
-          <button class="submit-btn">Hit it</button>
+          <div v-if="form.error" class="error-message">{{ form.error }}</div>
+          <input v-model="form.title" placeholder="Enter something..." class="input-field" />
+          <button class="submit-btn" @click="hitIt">Hit it</button>
         </form>
       </v-container>
     </v-main>
@@ -17,6 +64,11 @@
 <style scoped>
 /* Base styles (Mobile-first approach) */
 .container {
+  .error-message {
+    color: red;
+    margin-bottom: 10px;
+  }
+
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -66,7 +118,7 @@
   }
 
   .submit-btn {
-    width: 70%;
+    width: auto;
   }
 }
 </style>
