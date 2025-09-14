@@ -1,10 +1,11 @@
 <script lang="ts" setup>
-import { ref, reactive, onMounted } from 'vue'
+import { ref, reactive } from 'vue'
 
 const loading = ref(false)
 const form = reactive({
   title: '',
   error: '',
+  message: '',
 })
 const hitIt = async (e: Event) => {
   e.preventDefault()
@@ -31,6 +32,7 @@ const hitIt = async (e: Event) => {
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`)
     }
+    form.message = 'Sucess'
 
     const result = await response.json()
     console.log('Idea added:', result)
@@ -58,6 +60,7 @@ const resetForm = () => {
         <form>
           <div v-if="loading">Loading...</div>
           <div v-if="form.error" class="error-message">{{ form.error }}</div>
+          <div v-if="form.message" class="message">{{ form.message }}</div>
           <input v-model="form.title" placeholder="Enter something..." class="input-field" />
           <button class="submit-btn" @click="hitIt">Hit it</button>
         </form>

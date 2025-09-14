@@ -1,7 +1,5 @@
-<script lang="ts" setup>
-import HitIt from './views/HitIt.vue'
-</script>
+<script lang="ts" setup></script>
 
 <template>
-  <HitIt />
+  <router-view />
 </template>
