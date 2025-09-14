@@ -1,5 +1,6 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
+import { analytics } from './firebaseConfig'
 
 const loading = ref(false)
 const form = reactive({
@@ -9,6 +10,7 @@ const form = reactive({
 const hitIt = async (e: Event) => {
   e.preventDefault()
   try {
+    console.log('Firebase analytics initialized example:', analytics)
     loading.value = true
     const idea = {
       idea_title: form.title,
