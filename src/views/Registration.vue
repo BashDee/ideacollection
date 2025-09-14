@@ -21,7 +21,7 @@ const register = async () => {
     await createUserWithEmailAndPassword(auth, email.value, password.value)
     alert('User registered successfully!')
   } catch (error) {
-    console.error(error.message)
+    console.log(error)
   }
 }
 </script>
