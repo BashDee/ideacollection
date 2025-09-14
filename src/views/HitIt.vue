@@ -1,7 +1,5 @@
 <script lang="ts" setup>
 import { ref, reactive, onMounted } from 'vue'
-import { analytics } from './firebaseConfig'
-// console.log('Firebase analytics initialized example:', analytics)
 
 const loading = ref(false)
 const form = reactive({

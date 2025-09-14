@@ -1,7 +1,7 @@
 <script lang="ts" setup>
-import Hitit from './views/Hitit.vue'
+import HitIt from './views/HitIt.vue'
 </script>
 
 <template>
-  <Hitit />
+  <HitIt />
 </template>
