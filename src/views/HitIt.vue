@@ -1,27 +1,32 @@
 <script lang="ts" setup>
-import { ref, reactive } from 'vue'
+import { ref } from 'vue'
 
 const loading = ref(false)
-const form = reactive({
-  title: '',
-  error: '',
-  message: '',
-})
-const hitIt = async (e: Event) => {
-  e.preventDefault()
+const title = ref('')
+const error = ref('')
+const message = ref('')
+
+// In a real application, this should come from an environment variable
+const API_URL = 'http://localhost:8000/api/v1/idea'
+
+const hitIt = async () => {
+  // 1. Validation before anything else
+  if (!title.value) {
+    error.value = 'Title cannot be empty'
+    return
+  }
+
+  loading.value = true
+  error.value = ''
+  message.value = ''
+
   try {
-    loading.value = true
     const idea = {
-      idea_title: form.title,
-      description: form.title,
+      idea_title: title.value,
+      description: title.value, // Assuming this is intentional
     }
 
-    if (!form.title) {
-      form.error = 'Title cannot be empty'
-      return
-    }
-
-    const response = await fetch('http://localhost:8000/api/v1/idea', {
+    const response = await fetch(API_URL, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -29,27 +34,31 @@ const hitIt = async (e: Event) => {
       body: JSON.stringify(idea),
     })
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`)
-    }
-    form.message = 'Sucess'
-
     const result = await response.json()
+
+    if (!response.ok) {
+      // Try to get a more specific error message from the API response
+      const errorMsg = result.message || `HTTP error! status: ${response.status}`
+      throw new Error(errorMsg)
+    }
+
+    message.value = 'Success!'
     console.log('Idea added:', result)
 
     resetForm()
-    form.error = ''
-  } catch (error) {
-    form.error = 'Failed to add idea. Please try again.'
+  } catch (err: any) {
+    error.value = err.message || 'Failed to add idea. Please try again.'
     console.error('Error adding idea:', error)
   } finally {
     loading.value = false
+    // Clear success message after a few seconds
+    if (message.value) {
+      setTimeout(() => (message.value = ''), 3000)
+    }
   }
 }
 
-const resetForm = () => {
-  form.title = ''
-}
+const resetForm = () => {}
 </script>
 
 <template>
@@ -57,12 +66,12 @@ const resetForm = () => {
     <v-main>
       <v-container fluid class="container">
         <h1>iDeas</h1>
-        <form>
+        <form @submit.prevent="hitIt">
           <div v-if="loading">Loading...</div>
-          <div v-if="form.error" class="error-message">{{ form.error }}</div>
-          <div v-if="form.message" class="message">{{ form.message }}</div>
-          <input v-model="form.title" placeholder="Enter something..." class="input-field" />
-          <button class="submit-btn" @click="hitIt">Hit it</button>
+          <div v-if="error" class="error-message">{{ error }}</div>
+          <div v-if="message" class="success-message">{{ message }}</div>
+          <input v-model="title" placeholder="Enter something..." class="input-field" />
+          <button type="submit" class="submit-btn" :disabled="loading">Hit it</button>
         </form>
       </v-container>
     </v-main>
@@ -74,6 +83,11 @@ const resetForm = () => {
 .container {
   .error-message {
     color: red;
+    margin-bottom: 10px;
+  }
+
+  .success-message {
+    color: #0d2e0e; /* Dark green for better contrast on light green background */
     margin-bottom: 10px;
   }
 
@@ -110,7 +124,12 @@ const resetForm = () => {
   cursor: pointer;
 }
 
-.submit-btn:hover {
+.submit-btn:disabled {
+  background-color: #5a98d6;
+  cursor: not-allowed;
+}
+
+.submit-btn:hover:not(:disabled) {
   background-color: #0056b3;
 }
 
